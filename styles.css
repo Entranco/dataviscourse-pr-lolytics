@@ -1,0 +1,13 @@
+table {
+    font: 14px sans-serif;
+}
+
+th {
+    font-weight: normal;
+    text-align: center;
+    padding-right: 6px;
+}
+
+td {
+    text-align: left;
+}
