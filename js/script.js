@@ -1,14 +1,8 @@
-years = ['2019', '2020', '2021']
-datMap = {}
-cols = []
-
-function groupDataByAttribute(data) {
-    attrMap = {}
-
-    for ([key, value] in data.entries) {
-        data[key]
-    }
+years = []
+for (i = 2011; i <= 2022; i++) {
+    years.append(i + '')
 }
+datMap = {}
 
 Promise.apply(() => {
     years.forEach(d => {
