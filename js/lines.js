@@ -1,9 +1,9 @@
 class Lines {
-    constructor(dataMap, years, cols) {
+    constructor(champData, years, champs) {
         this.years = years;
-        this.dataMap = dataMap;
-        this.cols = cols;
-        this.selected = None
+        this.champData = champData;
+        this.champs = champs;
+        this.selected = 'KDA';
 
         d3.select('#line-svg')
         .attr('height', 1000)
@@ -15,14 +15,40 @@ class Lines {
     }
 
     drawVisuals() {
-
+        const col = this.selected;
         // draw some lines
-        d3.select('#line-svg')
-        .select('#lines')
-        .selectAll('line')
-        .data(this.years)
-        .join('line')
-        .attr('') 
+
+        let min = 100000000;
+        let max = -1;
+
+        for([key, val] in this.champData.entries()) {
+            min = Math.min(min, d3.min(val.map(d => d[col])));
+            max = Math.max(max, d3.max(val.map(d => d[col])));
+        }
+
+        const xScale = d3.scaleOrdinal()
+        .domain(years.map(years))
+        .range([0, 1000]);
+
+        const yScale = d3.scaleLinear()
+        .domain([min, max])
+        .range([0, 1000]);
+
+        for([key, val] in this.champData.entries()) {
+            const line = d3.line()
+            .x(d => xScale(d.year))
+            .y(d => yScale(d[col]));
+
+            d3.select('#line-svg')
+            .select('#lines')
+            .selectAll('path')
+            .data(this.champs)
+            .join('path')
+            .datum(d => champData[d])
+            .attr('d', line);
+
+            
+        }
     }
 
 
