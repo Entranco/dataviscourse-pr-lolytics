@@ -8,7 +8,21 @@ class Table {
         this.selectedChamps = [];
         this.lines = lines;
 
-        this.drawTable();
+        d3.select("#select-button")
+            .selectAll('myOptions')
+            .data(this.years)
+            .enter()
+            .append('option')
+            .text(d => d)
+            .attr("value", d => d)
+
+        d3.select("#select-button").on("change", d => {
+            let option = d3.select("#select-button").property("value")
+            this.currYear = parseInt(option)
+            this.drawTable()
+        })
+
+        this.drawTable()
     }
 
     drawTable() {
