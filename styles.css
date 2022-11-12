@@ -11,3 +11,9 @@ th {
 td {
     text-align: left;
 }
+
+#line-svg {
+    stroke: black;
+    stroke-width: 2;
+    fill: none;
+  }
