@@ -31,3 +31,9 @@ td:first-of-type{
 td {
     text-align: center;
 }
+
+#line-svg {
+    stroke: black;
+    stroke-width: 2;
+    fill: none;
+  }

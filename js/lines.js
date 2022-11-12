@@ -1,8 +1,20 @@
+LEFT_LINE_MARGIN = 50;
+BOTTOM_LINE_MARGIN = 50;
+
 class Lines {
-    constructor(champData, years, champs) {
+    constructor(champData, years, champs, cols) {
         this.years = years;
         this.champData = champData;
         this.champs = champs;
+
+        for(const key in this.champData) {
+            this.champData[key] = this.champData[key].map((d) => {
+                cols.forEach((c) => {
+                    d[c] = this.convertDataToNum(d[c]);
+                })
+                return d;
+            })
+        }
         this.selected = 'KDA';
 
         d3.select('#line-svg')
@@ -27,30 +39,45 @@ class Lines {
             max = Math.max(max, d3.max(val.map(d => d[col])));
         }
 
-        const xScale = d3.scaleOrdinal()
+        const xScale = d3.scalePoint()
         .domain(years)
-        .range([0, 1000]);
+        .range([50, 950]);
 
         const yScale = d3.scaleLinear()
         .domain([min, max])
-        .range([0, 1000]);
+        .range([950, 50]);
+
+        d3.select('#x-lineAxis')
+        .call(d3.axisBottom(xScale))
+        .attr('transform', `translate(0,950)`);
+
+        d3.select('#y-lineAxis')
+        .call(d3.axisLeft(yScale))
+        .attr('transform', `translate(50, 0)`);
 
         const line = d3.line()
-        .x(d => xScale(parseInt(d.year)))
-        .y(d => yScale(this.convertDataToNum(d[col])));
+        .x(d => xScale(d.year))
+        .y(d => yScale(d[col]));
 
         
         d3.select('#line-svg')
         .select('#lines')
         .selectAll('path')
-        .datum(this.champs.map(champ => this.champData[champ]))
+        .data(this.champs.map(champ => this.champData[champ]))
         .join('path')
+        .datum(d => d)
         .attr('d', line);
     }
 
     convertDataToNum(data) {
         if (data == '-') {
-            return 0.0
+            return 0.0;
+        }
+        else  if (data == undefined) {
+            console.log("fuk");
+        }
+        else if (data.endsWith("%")) {
+            return parseFloat(data.slice(0, data.length - 1));
         }
         else {
             return parseFloat(data);
