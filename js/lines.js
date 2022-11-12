@@ -36,17 +36,26 @@ class Lines {
         .range([0, 1000]);
 
         const line = d3.line()
-        .x(d => xScale(d.year))
-        .y(d => yScale(d[col]));
+        .x(d => xScale(parseInt(d.year)))
+        .y(d => yScale(this.convertDataToNum(d[col])));
 
         
 
         d3.select('#line-svg')
         .select('#lines')
         .selectAll('path')
-        .data(this.champs.map(champ => this.champData[champ]))
+        .datum(this.champs.map(champ => this.champData[champ]))
         .join('path')
         .attr('d', line);
+    }
+
+    convertDataToNum(data) {
+        if (data == '-') {
+            return 0.0
+        }
+        else {
+            return parseFloat(data);
+        }
     }
 
 
