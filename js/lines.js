@@ -21,34 +21,32 @@ class Lines {
         let min = 100000000;
         let max = -1;
 
-        for([key, val] in this.champData.entries()) {
+        for(const key in this.champData) {
+            const val = this.champData[key];
             min = Math.min(min, d3.min(val.map(d => d[col])));
             max = Math.max(max, d3.max(val.map(d => d[col])));
         }
 
         const xScale = d3.scaleOrdinal()
-        .domain(years.map(years))
+        .domain(years)
         .range([0, 1000]);
 
         const yScale = d3.scaleLinear()
         .domain([min, max])
         .range([0, 1000]);
 
-        for([key, val] in this.champData.entries()) {
-            const line = d3.line()
-            .x(d => xScale(d.year))
-            .y(d => yScale(d[col]));
+        const line = d3.line()
+        .x(d => xScale(d.year))
+        .y(d => yScale(d[col]));
 
-            d3.select('#line-svg')
-            .select('#lines')
-            .selectAll('path')
-            .data(this.champs)
-            .join('path')
-            .datum(d => champData[d])
-            .attr('d', line);
+        
 
-            
-        }
+        d3.select('#line-svg')
+        .select('#lines')
+        .selectAll('path')
+        .data(this.champs.map(champ => this.champData[champ]))
+        .join('path')
+        .attr('d', line);
     }
 
 

@@ -2,9 +2,9 @@ years = []
 for (i = 2011; i <= 2022; i++) {
     years.push(i + '')
 }
-datMap = {}
-champs = new Set()
-champData = {}
+datMap = {};
+champs = new Set();
+champData = {};
 
 async function loadData() {
     for(i = 0; i < years.length; i++) {
@@ -35,5 +35,5 @@ loadData().then(() => {
         });
     });
 
-    const lines = new Lines(champData, years, champs);
+    const lines = new Lines(champData, years, Array.from(champs));
 });
