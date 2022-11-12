@@ -1,13 +1,28 @@
+.divvy-boi {
+    display: flex;
+}
+
 table {
     font: 14px sans-serif;
+    margin-left: 100px;
+}
+
+thead {
+    background-color: #FFDC00;
 }
 
 th {
     font-weight: normal;
     text-align: center;
     padding-right: 6px;
+    min-width: 100px;
+}
+
+td:first-of-type{
+    text-align: left;
+    background-color: #00bfff70;
 }
 
 td {
-    text-align: left;
+    text-align: center;
 }

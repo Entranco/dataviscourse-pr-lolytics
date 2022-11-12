@@ -38,9 +38,7 @@ class Lines {
         const line = d3.line()
         .x(d => xScale(d.year))
         .y(d => yScale(d[col]));
-
         
-
         d3.select('#line-svg')
         .select('#lines')
         .selectAll('path')
@@ -48,6 +46,4 @@ class Lines {
         .join('path')
         .attr('d', line);
     }
-
-
 }

@@ -36,4 +36,5 @@ loadData().then(() => {
     });
 
     const lines = new Lines(champData, years, Array.from(champs));
+    const table = new Table(champData, years, Array.from(champs), datMap);
 });
