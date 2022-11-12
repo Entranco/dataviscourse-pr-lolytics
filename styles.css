@@ -2,6 +2,11 @@
     display: flex;
 }
 
+#select-button {
+    position: absolute;
+    left: 30%;
+}
+
 table {
     font: 14px sans-serif;
     margin-left: 100px;
