@@ -55,6 +55,19 @@ class Lines {
         .call(d3.axisLeft(yScale))
         .attr('transform', `translate(50, 0)`);
 
+        d3.select('#line-axis-labels')
+        .append('text')
+        .attr('x', '485')
+        .attr('y', '990')
+        .text('Year');
+
+        d3.select('#line-axis-labels')
+        .append('text')
+        .attr('x', '0')
+        .attr('y', '490')
+        .text('KDA');
+
+
         const line = d3.line()
         .x(d => xScale(d.year))
         .y(d => yScale(d[col]));
