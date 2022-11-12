@@ -3,13 +3,12 @@
 }
 
 #select-button {
-    position: absolute;
-    left: 30%;
+    height: 25px;
+    width: 60px;
 }
 
 table {
     font: 14px sans-serif;
-    margin-left: 100px;
 }
 
 thead {
@@ -37,3 +36,11 @@ td {
     stroke-width: 2;
     fill: none;
   }
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}

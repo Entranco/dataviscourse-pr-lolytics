@@ -15,11 +15,17 @@ class Table {
             .append('option')
             .text(d => d)
             .attr("value", d => d)
+            .attr("selected", d => d == "2022");
 
         d3.select("#select-button").on("change", d => {
             let option = d3.select("#select-button").property("value")
             this.currYear = parseInt(option)
-            this.drawTable()
+            this.selectedChamps.forEach(champ => {
+                d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', 'white');
+            })
+            this.selectedChamps = [];
+            this.drawTable();
+            this.lines.defaultLines();
         })
 
         this.drawTable()
