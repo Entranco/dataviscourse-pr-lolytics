@@ -59,7 +59,7 @@ class Lines {
         .x(d => xScale(d.year))
         .y(d => yScale(d[col]));
 
-
+        
         d3.select('#line-svg')
         .select('#lines')
         .selectAll('path')
