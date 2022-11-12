@@ -21,6 +21,18 @@ class Lines {
         .attr('height', 1000)
         .attr('width', 1000);
 
+        d3.select('#line-axis-labels')
+        .append('text')
+        .attr('x', '485')
+        .attr('y', '990')
+        .text('Year');
+
+        d3.select('#line-axis-labels')
+        .append('text')
+        .attr('x', '0')
+        .attr('y', '490')
+        .text('KDA');
+
         //this.timeScale = d3
 
         this.defaultLines();
@@ -55,18 +67,6 @@ class Lines {
         .call(d3.axisLeft(yScale))
         .attr('transform', `translate(50, 0)`);
 
-        d3.select('#line-axis-labels')
-        .append('text')
-        .attr('x', '485')
-        .attr('y', '990')
-        .text('Year');
-
-        d3.select('#line-axis-labels')
-        .append('text')
-        .attr('x', '0')
-        .attr('y', '490')
-        .text('KDA');
-
 
         const line = d3.line()
         .x(d => xScale(d.year))
@@ -80,7 +80,8 @@ class Lines {
         .join('path')
         .datum(d => d)
         .attr('d', line)
-        .attr('stroke', d => colorScale(d[0].Champion));
+        .attr('stroke', d => colorScale(d[0].Champion))
+        .attr('stroke-width', 2);
     }
 
     convertDataToNum(data) {
