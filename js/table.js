@@ -1,19 +1,44 @@
 class Table {
-    constructor(champData, years, champs, datemap) {
+    constructor(champData, years, champs, datemap, lines) {
         this.years = years;
         this.champData = champData;
         this.champs = champs;
         this.currYear = 2022
         this.datemap = datemap
+        this.selectedChamps = [];
+        this.lines = lines;
 
-        this.drawTable()
+        this.drawTable();
     }
 
     drawTable() {
         let rowSelection = d3.select('#table-body')
             .selectAll('tr')
             .data(this.datemap[this.currYear])
-            .join('tr');
+            .join('tr')
+            .attr('id', d => `${this.champNameScrub(d.Champion)}-row`)
+            .on('click', (i, d) => {
+                if (this.selectedChamps.find(dat => dat == d.Champion)) {
+                    this.selectedChamps = this.selectedChamps.filter(dat => dat != d.Champion);
+                    d3.select(`#${this.champNameScrub(d.Champion)}-row`).style('background-color', 'white');
+                }
+                else {
+                    this.selectedChamps.push(d.Champion);
+                    if (this.selectedChamps.length > 10) {
+                        d3.select(`#${this.champNameScrub(this.selectedChamps[0])}-row`).style('background-color', 'white');
+                        this.selectedChamps = this.selectedChamps.slice(1, this.selectedChamps.length);
+                    }
+                }
+                
+                const colorScale = d3.scaleOrdinal()
+                .domain(this.selectedChamps)
+                .range(d3.schemeCategory10);
+
+                this.selectedChamps.forEach(champ => {
+                    d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', colorScale(champ));
+                });
+                this.lines.filterChamps(this.selectedChamps, colorScale);
+            });
 
         let statSelection = rowSelection.selectAll('td')
             .data(this.rowToCellDataTransform)
@@ -21,6 +46,7 @@ class Table {
             .attr("id", d => d.id)
         
         statSelection.filter(d => d.type === "text").text(d => d.value)
+        
     }
 
     rowToCellDataTransform(d) {
@@ -106,5 +132,9 @@ class Table {
                         loss_info, winrate_info, kill_info, death_info, assist_info, kda_info]
 
         return dataList
+    }
+
+    champNameScrub(champ) {
+        return champ.replace(' ', '').replace('\'', '');
     }
 }

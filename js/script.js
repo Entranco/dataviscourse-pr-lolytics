@@ -47,6 +47,9 @@ loadData().then(() => {
         });
     });
 
-    const lines = new Lines(champData, years, Array.from(champs), cols);
-    const table = new Table(champData, years, Array.from(champs), datMap);
+    const newChamps = Array.from(champs);
+    newChamps.sort((a, b) => a.localeCompare(b), cols);
+
+    const lines = new Lines(champData, years, newChamps, cols);
+    const table = new Table(champData, years, Array.from(champs), datMap, lines);
 });

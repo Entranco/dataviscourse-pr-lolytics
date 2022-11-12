@@ -23,10 +23,10 @@ class Lines {
 
         //this.timeScale = d3
 
-        this.drawVisuals()
+        this.defaultLines();
     }
 
-    drawVisuals() {
+    drawVisuals(currentChamps, colorScale) {
         const col = this.selected;
         // draw some lines
 
@@ -44,7 +44,7 @@ class Lines {
         .range([50, 950]);
 
         const yScale = d3.scaleLinear()
-        .domain([min, max])
+        .domain([0, max])
         .range([950, 50]);
 
         d3.select('#x-lineAxis')
@@ -63,10 +63,11 @@ class Lines {
         d3.select('#line-svg')
         .select('#lines')
         .selectAll('path')
-        .data(this.champs.map(champ => this.champData[champ]))
+        .data(currentChamps.map(champ => this.champData[champ]))
         .join('path')
         .datum(d => d)
-        .attr('d', line);
+        .attr('d', line)
+        .attr('stroke', d => colorScale(d[0].Champion));
     }
 
     convertDataToNum(data) {
@@ -82,6 +83,25 @@ class Lines {
         else {
             return parseFloat(data);
         }
+    }
+
+    filterChamps(champs, colorScale) {
+        if (champs.length == 0) {
+            this.defaultLines();
+            return;
+        }
+
+        this.drawVisuals(champs, colorScale);
+    }
+    
+    defaultLines() {
+        const slicey = this.champs.slice(0, 10);
+
+        const colorScale = d3.scaleOrdinal()
+        .domain(slicey)
+        .range(d3.schemeCategory10);
+
+        this.drawVisuals(slicey, colorScale);
     }
 
 
