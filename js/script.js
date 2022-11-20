@@ -5,7 +5,7 @@ for (i = 2011; i <= 2022; i++) {
 datMap = {};
 champs = new Set();
 champData = {};
-cols = ["Picks/Bans", "Pick/Bans%", "Bans", "Picks", "Players", "Wins", "Losses", "Winrate", "Kills", "Deaths", "Assists", "KDA", "CS", "CS/M", "Gold", "Gold/Min", "Damage", "Damage/Min", "KP", "Kill_Share", "Gold_Share"]
+cols = ["Picks/Bans", "Pick/Bans%", "Bans", "Picks", "Players", "Wins", "Losses", "Winrate", "Kills", "Deaths", "Assists", "KDA"]; //"CS", "CS/M", "Gold", "Gold/Min", "Damage", "Damage/Min", "KP", "Kill_Share", "Gold_Share"]
 
 
 async function loadData() {
@@ -51,5 +51,5 @@ loadData().then(() => {
     newChamps.sort((a, b) => a.localeCompare(b), cols);
 
     const lines = new Lines(champData, years, newChamps, cols);
-    const table = new Table(champData, years, Array.from(champs), datMap, lines);
+    const table = new Table(champData, years, Array.from(champs), datMap, lines, cols);
 });

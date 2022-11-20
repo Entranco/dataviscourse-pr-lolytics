@@ -1,11 +1,12 @@
 class Table {
-    constructor(champData, years, champs, datemap, lines) {
+    constructor(champData, years, champs, datemap, lines, cols) {
         this.years = years;
         this.champData = champData;
         this.champs = champs;
         this.currYear = 2022
         this.datemap = datemap
         this.selectedChamps = [];
+        this.selectedCol = [null, false];
         this.lines = lines;
 
         d3.select("#select-button")
@@ -24,17 +25,42 @@ class Table {
                 d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', 'white');
             })
             this.selectedChamps = [];
-            this.drawTable();
+            this.drawTable(this.datemap[this.currYear]);
             this.lines.defaultLines();
-        })
+        });
 
-        this.drawTable()
+        d3.select("#column-headers")
+        .selectAll("th")
+        .data(cols)
+        .filter((d, i) => i != 0)
+        .on("click", (a, d) => {
+            const column = d3.select('#column-headers')
+            .selectAll("th")
+            .filter((dat, i) => dat == d)
+
+            if(this.selectedCol[0] == d) {
+                this.selectedCol[1] = !this.selectedCol[1]
+            }
+            else {
+                this.selectedCol[0] = d;
+                this.selectedCol[1] = true
+            }
+
+            const tempArr = [...this.datemap[this.currYear]];
+            tempArr.sort((a, b) => a[d] - b[d]);
+            if (!this.selectedCol[1]) {
+                tempArr.reverse();
+            }
+            this.drawTable(tempArr);
+        });
+
+        this.drawTable(this.datemap[this.currYear]);
     }
 
-    drawTable() {
+    drawTable(rows) {
         let rowSelection = d3.select('#table-body')
             .selectAll('tr')
-            .data(this.datemap[this.currYear])
+            .data(rows)
             .join('tr')
             .attr('id', d => `${this.champNameScrub(d.Champion)}-row`)
             .on('click', (i, d) => {
