@@ -29,17 +29,15 @@ class Lines {
 
         d3.select('#line-axis-labels')
         .append('text')
+        .attr('id', 'line-axis-label-y')
         .attr('x', '0')
         .attr('y', '490')
-        .text('KDA');
+        .text('Picks/Bans');
 
-        //this.timeScale = d3
-
-        this.defaultLines();
+        this.defaultLines("Picks/Bans");
     }
 
-    drawVisuals(currentChamps, colorScale) {
-        const col = this.selected;
+    drawVisuals(currentChamps, colorScale, col) {
         // draw some lines
 
         let min = 100000000;
@@ -82,14 +80,14 @@ class Lines {
         .attr('d', line)
         .attr('stroke', d => colorScale(d[0].Champion))
         .attr('stroke-width', 2);
+
+        d3.select('#line-axis-label-y')
+        .text(col);
     }
 
     convertDataToNum(data) {
         if (data == '-') {
             return 0.0;
-        }
-        else  if (data == undefined) {
-            console.log("fuk");
         }
         else if (data.endsWith("%")) {
             return parseFloat(data.slice(0, data.length - 1));
@@ -99,24 +97,22 @@ class Lines {
         }
     }
 
-    filterChamps(champs, colorScale) {
+    filterChamps(champs, colorScale, col) {
         if (champs.length == 0) {
-            this.defaultLines();
+            this.defaultLines(col);
             return;
         }
 
-        this.drawVisuals(champs, colorScale);
+        this.drawVisuals(champs, colorScale, col);
     }
     
-    defaultLines() {
+    defaultLines(col) {
         const slicey = this.champs.slice(0, 10);
 
         const colorScale = d3.scaleOrdinal()
         .domain(slicey)
         .range(d3.schemeCategory10);
 
-        this.drawVisuals(slicey, colorScale);
+        this.drawVisuals(slicey, colorScale, col);
     }
-
-
 }

@@ -3,11 +3,14 @@ class Table {
         this.years = years;
         this.champData = champData;
         this.champs = champs;
-        this.currYear = 2022
-        this.datemap = datemap
+        this.currYear = 2022;
+        this.datemap = datemap;
         this.selectedChamps = [];
         this.selectedCol = [null, false];
         this.lines = lines;
+        this.colorScale = null;
+        this.dataCol = "Picks/Bans";
+        
 
         d3.select("#select-button")
             .selectAll('myOptions')
@@ -26,13 +29,12 @@ class Table {
             })
             this.selectedChamps = [];
             this.drawTable(this.datemap[this.currYear]);
-            this.lines.defaultLines();
+            this.lines.defaultLines(this.dataCol);
         });
 
         d3.select("#column-headers")
         .selectAll("th")
-        .data(cols)
-        .filter((d, i) => i != 0)
+        .data(["Champion", ...cols])
         .on("click", (a, d) => {
             const column = d3.select('#column-headers')
             .selectAll("th")
@@ -43,15 +45,33 @@ class Table {
             }
             else {
                 this.selectedCol[0] = d;
-                this.selectedCol[1] = true
+                this.selectedCol[1] = false;
             }
 
             const tempArr = [...this.datemap[this.currYear]];
-            tempArr.sort((a, b) => a[d] - b[d]);
+            if (d == "Champion") {
+                tempArr.sort((a, b) => a[d].localeCompare(b[d]));
+            }
+            else {
+                tempArr.sort((a, b) => a[d] - b[d]);
+            }
+            
             if (!this.selectedCol[1]) {
                 tempArr.reverse();
             }
+
+            this.selectedChamps.forEach(champ => {
+                d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', "white");
+            });
             this.drawTable(tempArr);
+            this.selectedChamps.forEach(champ => {
+                d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', this.colorScale(champ));
+            });
+            if (d != "Champion") {
+                this.dataCol = d;
+                this.lines.filterChamps(this.selectedChamps, this.colorScale, this.dataCol);
+            }
+            
         });
 
         this.drawTable(this.datemap[this.currYear]);
@@ -79,11 +99,12 @@ class Table {
                 const colorScale = d3.scaleOrdinal()
                 .domain(this.selectedChamps)
                 .range(d3.schemeCategory10);
+                this.colorScale = colorScale;
 
                 this.selectedChamps.forEach(champ => {
                     d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', colorScale(champ));
                 });
-                this.lines.filterChamps(this.selectedChamps, colorScale);
+                this.lines.filterChamps(this.selectedChamps, colorScale, this.dataCol);
             });
 
         let statSelection = rowSelection.selectAll('td')
