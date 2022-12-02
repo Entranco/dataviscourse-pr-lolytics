@@ -11,7 +11,7 @@ cols = ["Picks/Bans", "Pick/Bans%", "Bans", "Picks", "Players", "Wins", "Losses"
 async function loadData() {
     for(i = 0; i < years.length; i++) {
         datMap[years[i]] = [];
-        await d3.csv(`./data/worlds - ${years[i]}.csv`, (rows) => {
+        await d3.csv(`./data/worlds/worlds - ${years[i]}.csv`, (rows) => {
             datMap[years[i]].push(rows);
         });
     }
