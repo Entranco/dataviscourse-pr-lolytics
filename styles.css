@@ -31,16 +31,28 @@ td {
     text-align: center;
 }
 
-#line-svg {
-    stroke: black;
-    stroke-width: 1;
-    fill: none;
-  }
-
 h1 {
     text-align: center;
 }
 
 h2 {
     text-align: center;
+}
+
+#line-axis-labels {
+    font-size: 25px;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: bold;
+    fill: black;
+}
+
+
+.tooltip {
+    opacity: 80%;
+    stroke-width: 5px;
+    fill: black;
+}
+
+.tooltiptext {
+    fill: white;
 }

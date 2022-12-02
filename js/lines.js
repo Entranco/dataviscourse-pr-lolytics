@@ -29,8 +29,7 @@ class Lines {
         d3.select('#line-axis-labels')
         .append('text')
         .attr('id', 'line-axis-label-y')
-        .attr('x', '0')
-        .attr('y', '490')
+        .attr('transform', 'translate(20, 520) rotate(270)')
         .text('Picks/Bans');
 
         
@@ -84,14 +83,51 @@ class Lines {
         .attr('height', d => 950 - yScale(d[0][col]))
         .attr('fill', d => colorScale(d[0].Champion))
         .on('mouseover', (e, d) => {
-            d3.select('#line-svg')
+            let x = e.clientX;
+            let y = e.clientY;
+            if (x > 500) {
+                x = x - 230;
+            }
+
+            const group = d3.select('#line-svg')
             .select('#tooltip')
             .selectAll('g')
-            .data(champData)
-            .join('g')
+            .data([d[0]])
+            .join(
+            enter => {
+                enter.append('rect')
+                .attr('class', 'tooltip')
+                .attr('id', d => `${d.Champion}-tooltip`)
+                .attr('x', x + 20)
+                .attr('y', y + 20)
+                .attr('height', 50)
+                .attr('width', 150)
+                enter.append('text')
+                .attr('x', x + 30)
+                .attr('y', y + 33)
+                .attr('class', 'tooltiptext')
+                .append('tspan')
+                .text(d => `${d.Champion}`)
+                .attr('dy', 1.2)
+                .append('tspan')
+                .text(d => `${col}: ${d[col]}`)
+                .attr('x', x + 30)
+                .attr('dy', 15)
+                .append('tspan')
+                .text(`Sup sup`)
+                .attr('x', x + 30)
+                .attr('dy', 15);
+            }, 
+            update => {
+                update.select('rect')
+                .attr('x', x + 20)
+                .attr('y', y + 20);
+            },
+            exit => {
+                exit.remove();
+            }
+            );
             
-            e.clientX
-            e.clientY
         });
         
 
