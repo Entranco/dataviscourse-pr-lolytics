@@ -90,9 +90,11 @@ class Table {
                 }
                 else {
                     this.selectedChamps.push(d.Champion);
-                    if (this.selectedChamps.length > 10) {
-                        d3.select(`#${this.champNameScrub(this.selectedChamps[0])}-row`).style('background-color', 'white');
-                        this.selectedChamps = this.selectedChamps.slice(1, this.selectedChamps.length);
+                    if (this.selectedChamps.length > 5) {
+                        this.selectedChamps.forEach(champ => {
+                            d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', 'white');
+                        });
+                        this.selectedChamps = [d.Champion]
                     }
                 }
                 

@@ -19,11 +19,9 @@ async function loadData() {
 
 loadData().then(() => {
     years.forEach(d => {
-    
         datMap[d].forEach(champ => {
             champs.add(champ.Champion);
         });
-        
     });
 
     champs.forEach(c => {

@@ -15,11 +15,10 @@ class Lines {
                 return d;
             })
         }
-        this.selected = 'KDA';
 
         d3.select('#line-svg')
         .attr('height', 1000)
-        .attr('width', 1000);
+        .attr('width', 1010);
 
         d3.select('#line-axis-labels')
         .append('text')
@@ -33,6 +32,12 @@ class Lines {
         .attr('x', '0')
         .attr('y', '490')
         .text('Picks/Bans');
+
+        
+        const lineHolder = d3.select('#lines');
+        for(var i = 0; i < 10; i++) {
+            lineHolder.append("g").attr('id', `rect-holder-${i}`);
+        }
 
         this.defaultLines("Picks/Bans");
     }
@@ -65,21 +70,30 @@ class Lines {
         .call(d3.axisLeft(yScale))
         .attr('transform', `translate(50, 0)`);
 
-
-        const line = d3.line()
-        .x(d => xScale(d.year))
-        .y(d => yScale(d[col]));
-
-        
         d3.select('#line-svg')
         .select('#lines')
-        .selectAll('path')
-        .data(currentChamps.map(champ => this.champData[champ]))
-        .join('path')
-        .datum(d => d)
-        .attr('d', line)
-        .attr('stroke', d => colorScale(d[0].Champion))
-        .attr('stroke-width', 2);
+        .selectAll('g')
+        .data(currentChamps)
+        .join('g')
+        .selectAll('rect')
+        .data((d, i) => this.champData[d].map(el => [el, i]))
+        .join('rect')
+        .attr('x', d => xScale(d[0].year) + (10 * d[1]))
+        .attr('y', d => yScale(d[0][col]))
+        .attr('width', 6)
+        .attr('height', d => 950 - yScale(d[0][col]))
+        .attr('fill', d => colorScale(d[0].Champion))
+        .on('mouseover', (e, d) => {
+            d3.select('#line-svg')
+            .select('#tooltip')
+            .selectAll('g')
+            .data(champData)
+            .join('g')
+            
+            e.clientX
+            e.clientY
+        });
+        
 
         d3.select('#line-axis-label-y')
         .text(col);
@@ -107,7 +121,7 @@ class Lines {
     }
     
     defaultLines(col) {
-        const slicey = this.champs.slice(0, 10);
+        const slicey = this.champs.slice(0, 5);
 
         const colorScale = d3.scaleOrdinal()
         .domain(slicey)
