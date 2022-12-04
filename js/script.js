@@ -49,5 +49,6 @@ loadData().then(() => {
     newChamps.sort((a, b) => a.localeCompare(b), cols);
 
     const lines = new Lines(champData, years, newChamps, cols);
-    const table = new Table(champData, years, Array.from(champs), datMap, lines, cols);
+    const waffle = new Waffle(champData, years, Array.from(champs), Array.from(champs), datMap);
+    const table = new Table(champData, years, Array.from(champs), datMap, lines, cols, waffle);
 });
