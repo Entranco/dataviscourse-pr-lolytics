@@ -2,27 +2,9 @@ class Waffle {
     constructor(champData, years, selectedChamps, allChamps, dateMap) {
         this.allChamps = allChamps;
         this.champData = champData;
-        this.defaultWaffle("KDA", 2022);
     }
 
-    filterChamps(champs, col, year) {
-        if (champs.length == 0) {
-            this.defaultWaffle(col, year)
-        }
-
-        this.drawWaffle(champs, col, year);
-    }
-
-    defaultWaffle(col, year) {
-        this.drawWaffle(this.allChamps.slice(0,5), col, year);
-    }
-
-    drawWaffle(selectedChamps, col) {
-        const year = 2022;
-        const colorScale = d3.scaleOrdinal()
-            .domain(["Other", ...selectedChamps])
-            .range(['#808080', ...d3.schemeCategory10]);
-
+    drawWaffle(selectedChamps, col, year, colorScale) {
         let all_total = 0
         let other_total = 0
 

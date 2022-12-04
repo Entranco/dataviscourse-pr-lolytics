@@ -22,6 +22,10 @@ th {
     min-width: 50px;
 }
 
+#champion {
+    min-width: 110px;
+}
+
 td:first-of-type{
     text-align: left;
     background-color: #00bfff70;

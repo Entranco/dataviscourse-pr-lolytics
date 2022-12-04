@@ -9,8 +9,8 @@ class Table {
         this.selectedCol = [null, false];
         this.lines = lines;
         this.waffle = waffle;
-        this.colorScale = null;
         this.dataCol = "Picks/Bans";
+        this.defaultCharts();
         
 
         d3.select("#select-button")
@@ -30,8 +30,7 @@ class Table {
             })
             this.selectedChamps = [];
             this.drawTable(this.datemap[this.currYear]);
-            this.lines.defaultLines(this.dataCol);
-            this.waffle.defaultWaffle(this.dataCol, this.currYear);
+            this.defaultCharts();
         });
 
         d3.select("#column-headers")
@@ -71,8 +70,13 @@ class Table {
             });
             if (d != "Champion") {
                 this.dataCol = d;
-                this.lines.filterChamps(this.selectedChamps, this.colorScale, this.dataCol);
-                this.waffle.filterChamps(this.selectedChamps, this.dataCol, this.currYear);
+                if (this.selectedChamps.length == 0) {
+                    this.defaultCharts()
+                }
+                else {
+                    this.lines.drawVisuals(this.selectedChamps, this.colorScale, this.dataCol);
+                    this.waffle.drawWaffle(this.selectedChamps, this.dataCol, this.currYear, this.colorScale);
+                }
             }
             
         });
@@ -100,18 +104,23 @@ class Table {
                         this.selectedChamps = [d.Champion]
                     }
                 }
+
+                if (this.selectedChamps.length == 0) {
+                    this.defaultCharts();
+                    return;
+                }
                 
                 const colorScale = d3.scaleOrdinal()
-                .domain(this.selectedChamps)
-                .range(d3.schemeCategory10);
+                .domain([...this.selectedChamps, "Other"])
+                .range([...d3.schemeCategory10.slice(0, this.selectedChamps.length), '#808080']);
 
                 this.colorScale = colorScale;
 
                 this.selectedChamps.forEach(champ => {
                     d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', colorScale(champ));
                 });
-                this.lines.filterChamps(this.selectedChamps, colorScale, this.dataCol);
-                this.waffle.filterChamps(this.selectedChamps, this.dataCol, this.currYear);
+                this.lines.drawVisuals(this.selectedChamps, colorScale, this.dataCol);
+                this.waffle.drawWaffle(this.selectedChamps, this.dataCol, this.currYear, colorScale);
             });
 
         rowSelection.selectAll('td')
@@ -128,7 +137,7 @@ class Table {
         
                 statSelection.filter(d => d.type === "text")
                 .append('span')
-                .text(d => `${d.value}`);
+                .text(d => ` ${d.value}`);
             },
             update => {
                 update.select('img')
@@ -140,19 +149,6 @@ class Table {
             exit => {
                 exit.remove();
             })
-
-        // statSelection.filter(d => d.id == "champ-td")
-        //     .append('img')
-        //     .attr('src', d => `data/icons/${d.value.replace(' ', '_')}Square.png`)
-        //     .attr('height', 20)
-        //     .attr('width', 20);
-        
-        // statSelection.filter(d => d.type === "text")
-        // .append('span')
-        // .text(d => ` ${d.value}`)
-
-        
-        
     }
 
     rowToCellDataTransform(d) {
@@ -243,4 +239,17 @@ class Table {
     champNameScrub(champ) {
         return champ.replace(' ', '').replace('\'', '');
     }
+
+    defaultCharts() {
+        const tempChamps = this.champs.slice(0, this.champs.length);
+        tempChamps.sort((a, b) => this.champData[b][parseInt(this.currYear) - 2011][this.dataCol] - this.champData[a][parseInt(this.currYear) - 2011][this.dataCol]);
+        const slicey = tempChamps.slice(0, 5);
+        this.colorScale = d3.scaleOrdinal()
+        .domain([...slicey, "Other"])
+        .range([...d3.schemeCategory10.slice(0, 5), '#808080']);
+        
+        this.lines.drawVisuals(slicey, this.colorScale, this.dataCol);
+        this.waffle.drawWaffle(slicey, this.dataCol, this.currYear, this.colorScale);
+    }
+    
 }

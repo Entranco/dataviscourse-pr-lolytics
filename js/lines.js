@@ -37,8 +37,6 @@ class Lines {
         for(var i = 0; i < 10; i++) {
             lineHolder.append("g").attr('id', `rect-holder-${i}`);
         }
-
-        this.defaultLines("Picks/Bans");
     }
 
     drawVisuals(currentChamps, colorScale, col) {
@@ -54,7 +52,7 @@ class Lines {
         }
 
         const xScale = d3.scalePoint()
-        .domain(years)
+        .domain([...years, '2023'])
         .range([50, 950]);
 
         const yScale = d3.scaleLinear()
@@ -86,7 +84,7 @@ class Lines {
             let x = e.pageX;
             let y = e.pageY - 255;
             if (x > 500) {
-                x = x - 230;
+                x = x - 195;
             } 
 
             d3.select('#line-svg')
@@ -106,6 +104,13 @@ class Lines {
             .attr('y', y + 20)
             .attr('height', 50)
             .attr('width', 150)
+
+            g.append('image')
+            .attr('href', `data/icons/${d[0].Champion.replace(' ', '_')}Square.png`)
+            .attr('height', 50)
+            .attr('width', 50)
+            .attr('x', x + 20)
+            .attr('y', y - 30);
             g.append('text')
             .attr('x', x + 30)
             .attr('y', y + 33)
@@ -120,9 +125,15 @@ class Lines {
             .attr('x', x + 30)
             .attr('dy', 15)
             .append('tspan')
-            .text(`Sup sup`)
+            .text(`Year: ${d[0].year}`)
             .attr('x', x + 30)
-            .attr('dy', 15);    
+            .attr('dy', 15);
+        })
+        .on('mouseleave', _ => {
+            d3.select('#line-svg')
+            .select('#tooltip')
+            .selectAll('g')
+            .remove();
         });
         
 
@@ -150,24 +161,5 @@ class Lines {
         else {
             return parseFloat(data);
         }
-    }
-
-    filterChamps(champs, colorScale, col) {
-        if (champs.length == 0) {
-            this.defaultLines(col);
-            return;
-        }
-
-        this.drawVisuals(champs, colorScale, col);
-    }
-    
-    defaultLines(col) {
-        const slicey = this.champs.slice(0, 5);
-
-        const colorScale = d3.scaleOrdinal()
-        .domain(slicey)
-        .range(d3.schemeCategory10);
-
-        this.drawVisuals(slicey, colorScale, col);
     }
 }
