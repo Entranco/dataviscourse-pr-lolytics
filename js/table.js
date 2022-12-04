@@ -1,5 +1,5 @@
 class Table {
-    constructor(champData, years, champs, datemap, lines, cols) {
+    constructor(champData, years, champs, datemap, lines, cols, waffle) {
         this.years = years;
         this.champData = champData;
         this.champs = champs;
@@ -8,6 +8,7 @@ class Table {
         this.selectedChamps = [];
         this.selectedCol = [null, false];
         this.lines = lines;
+        this.waffle = waffle;
         this.colorScale = null;
         this.dataCol = "Picks/Bans";
         
@@ -30,6 +31,7 @@ class Table {
             this.selectedChamps = [];
             this.drawTable(this.datemap[this.currYear]);
             this.lines.defaultLines(this.dataCol);
+            this.waffle.defaultWaffle(this.dataCol, this.currYear);
         });
 
         d3.select("#column-headers")
@@ -70,6 +72,7 @@ class Table {
             if (d != "Champion") {
                 this.dataCol = d;
                 this.lines.filterChamps(this.selectedChamps, this.colorScale, this.dataCol);
+                this.waffle.filterChamps(this.selectedChamps, this.dataCol, this.currYear);
             }
             
         });
@@ -101,12 +104,14 @@ class Table {
                 const colorScale = d3.scaleOrdinal()
                 .domain(this.selectedChamps)
                 .range(d3.schemeCategory10);
+
                 this.colorScale = colorScale;
 
                 this.selectedChamps.forEach(champ => {
                     d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', colorScale(champ));
                 });
                 this.lines.filterChamps(this.selectedChamps, colorScale, this.dataCol);
+                this.waffle.filterChamps(this.selectedChamps, this.dataCol, this.currYear);
             });
 
         let statSelection = rowSelection.selectAll('td')
