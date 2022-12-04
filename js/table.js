@@ -110,9 +110,7 @@ class Table {
                     return;
                 }
                 
-                const colorScale = d3.scaleOrdinal()
-                .domain([...this.selectedChamps, "Other"])
-                .range([...d3.schemeCategory10.slice(0, this.selectedChamps.length), '#808080']);
+                const colorScale = this.createColorScale(this.selectedChamps, d3.schemeCategory10);
 
                 this.colorScale = colorScale;
 
@@ -149,6 +147,18 @@ class Table {
             exit => {
                 exit.remove();
             })
+    }
+
+    createColorScale(champs, colors) {
+        return d3.scaleOrdinal()
+        .domain([...champs, "Other"])
+        .range([...d3.schemeCategory10.slice(0, champs.length), "#808080"]);
+        // this.colorDict = {};
+        // for(var i = 0; i < champs.length; i++) {
+        //     this.colorDict[champs[i]] = colors[i];
+        // }
+        // this.colorDict['other'] = "#808080";
+        // return (chmp) => this.colorDict[chmp];
     }
 
     rowToCellDataTransform(d) {
@@ -244,9 +254,7 @@ class Table {
         const tempChamps = this.champs.slice(0, this.champs.length);
         tempChamps.sort((a, b) => this.champData[b][parseInt(this.currYear) - 2011][this.dataCol] - this.champData[a][parseInt(this.currYear) - 2011][this.dataCol]);
         const slicey = tempChamps.slice(0, 5);
-        this.colorScale = d3.scaleOrdinal()
-        .domain([...slicey, "Other"])
-        .range([...d3.schemeCategory10.slice(0, 5), '#808080']);
+        this.colorScale = this.createColorScale(slicey, d3.schemeCategory10);
         
         this.lines.drawVisuals(slicey, this.colorScale, this.dataCol);
         this.waffle.drawWaffle(slicey, this.dataCol, this.currYear, this.colorScale);

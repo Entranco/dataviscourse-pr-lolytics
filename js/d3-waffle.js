@@ -1,3 +1,6 @@
+// This is a library we downloaded for making waffle charts more easily. You can access this library using the following:
+// github repo https://github.com/jbkunst/d3-waffle.git
+
 function d3waffle(_colorscale) {
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
       icon = "&#9632;",
@@ -21,7 +24,7 @@ function d3waffle(_colorscale) {
 
       /* updating data */
       data.forEach(function(d, i){
-        data[i].class = slugify(d.name);
+        data[i].class = d.name;
         data[i].scalevalue = Math.round(data[i].value*scale);
         data[i].percent = data[i].value/total;
       });
