@@ -82,57 +82,62 @@ class Lines {
         .attr('width', 6)
         .attr('height', d => 950 - yScale(d[0][col]))
         .attr('fill', d => colorScale(d[0].Champion))
-        .on('mouseover', (e, d) => {
-            let x = e.clientX;
-            let y = e.clientY;
+        .on('mousemove', (e, d) => {
+            let x = e.pageX;
+            let y = e.pageY - 255;
             if (x > 500) {
                 x = x - 230;
-            }
+            } 
 
-            const group = d3.select('#line-svg')
+            d3.select('#line-svg')
             .select('#tooltip')
             .selectAll('g')
-            .data([d[0]])
-            .join(
-            enter => {
-                enter.append('rect')
-                .attr('class', 'tooltip')
-                .attr('id', d => `${d.Champion}-tooltip`)
-                .attr('x', x + 20)
-                .attr('y', y + 20)
-                .attr('height', 50)
-                .attr('width', 150)
-                enter.append('text')
-                .attr('x', x + 30)
-                .attr('y', y + 33)
-                .attr('class', 'tooltiptext')
-                .append('tspan')
-                .text(d => `${d.Champion}`)
-                .attr('dy', 1.2)
-                .append('tspan')
-                .text(d => `${col}: ${d[col]}`)
-                .attr('x', x + 30)
-                .attr('dy', 15)
-                .append('tspan')
-                .text(`Sup sup`)
-                .attr('x', x + 30)
-                .attr('dy', 15);
-            }, 
-            update => {
-                update.select('rect')
-                .attr('x', x + 20)
-                .attr('y', y + 20);
-            },
-            exit => {
-                exit.remove();
-            }
-            );
-            
+            .remove();
+
+            const g = d3.select('#line-svg')
+            .select('#tooltip')
+            .append('g')
+            .attr('id', `${d[0].Champion}-rect`);
+
+            g.append('rect')
+            .attr('class', 'tooltip')
+            .attr('id', `${d[0].Champion}-tooltip`)
+            .attr('x', x + 20)
+            .attr('y', y + 20)
+            .attr('height', 50)
+            .attr('width', 150)
+            g.append('text')
+            .attr('x', x + 30)
+            .attr('y', y + 33)
+            .attr('class', 'tooltiptext')
+            .append('tspan')
+            .attr('id', 'tooltip-champ-name')
+            .text(`${d[0].Champion}`)
+            .attr('dy', 1.2)
+            .append('tspan')
+            .attr('id', 'tooltip-data')
+            .text(`${col}: ${d[0][col]}`)
+            .attr('x', x + 30)
+            .attr('dy', 15)
+            .append('tspan')
+            .text(`Sup sup`)
+            .attr('x', x + 30)
+            .attr('dy', 15);    
         });
         
 
         d3.select('#line-axis-label-y')
         .text(col);
+    }
+
+    numToData(num) {
+        const champ = this.champs[Math.floor(num / this.champs.length)]
+        const year = num % this.champs.length;
+        return this.champData[champ][year];
+    }
+
+    dataToNum(dat) {
+        return (this.champs.indexOf(dat.Champion) * this.champs.length) + parseInt(dat.year) - 2011;
     }
 
     convertDataToNum(data) {
