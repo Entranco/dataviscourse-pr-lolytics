@@ -118,8 +118,18 @@ class Table {
             .data(this.rowToCellDataTransform)
             .join('td')
             .attr("id", d => d.id)
+
+        statSelection.filter(d => d.id == "champ-td")
+            .append('img')
+            .attr('src', d => `data/icons/${d.value.replace(' ', '_')}Square.png`)
+            .attr('height', 20)
+            .attr('width', 20);
         
-        statSelection.filter(d => d.type === "text").text(d => d.value)
+        statSelection.filter(d => d.type === "text")
+        .append('span')
+        .text(d => ` ${d.value}`)
+
+        
         
     }
 
