@@ -31,6 +31,7 @@ class Table {
             this.selectedChamps = [];
             this.drawTable(this.datemap[this.currYear]);
             this.lines.defaultLines(this.dataCol);
+            this.waffle.defaultWaffle(this.dataCol, this.currYear);
         });
 
         d3.select("#column-headers")
@@ -71,7 +72,7 @@ class Table {
             if (d != "Champion") {
                 this.dataCol = d;
                 this.lines.filterChamps(this.selectedChamps, this.colorScale, this.dataCol);
-                this.waffle.filterChamps(this.selectedChamps, this.dataCol);
+                this.waffle.filterChamps(this.selectedChamps, this.dataCol, this.currYear);
             }
             
         });
@@ -110,7 +111,7 @@ class Table {
                     d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', colorScale(champ));
                 });
                 this.lines.filterChamps(this.selectedChamps, colorScale, this.dataCol);
-                this.waffle.filterChamps(this.selectedChamps, this.dataCol);
+                this.waffle.filterChamps(this.selectedChamps, this.dataCol, this.currYear);
             });
 
         let statSelection = rowSelection.selectAll('td')

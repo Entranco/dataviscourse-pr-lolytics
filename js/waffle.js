@@ -1,25 +1,27 @@
 class Waffle {
     constructor(champData, years, selectedChamps, allChamps, dateMap) {
         this.allChamps = allChamps;
-        this.drawWaffle(champData, allChamps.slice(0, 5), "KDA", 2022)
+        this.champData = champData;
+        this.defaultWaffle("KDA", 2022);
     }
 
-    filterChamps(champs, col) {
+    filterChamps(champs, col, year) {
         if (champs.length == 0) {
-            this.defaultWaffle(col)
+            this.defaultWaffle(col, year)
         }
 
-        this.drawWaffle(champs, col);
+        this.drawWaffle(champs, col, year);
     }
 
-    defaultWaffle(col) {
-
+    defaultWaffle(col, year) {
+        this.drawWaffle(this.allChamps.slice(0,5), col, year);
     }
 
-    drawWaffle(champData, selectedChamps, col, year) {
+    drawWaffle(selectedChamps, col) {
+        const year = 2022;
         const colorScale = d3.scaleOrdinal()
-            .domain([...selectedChamps, "Other"])
-            .range(d3.schemeCategory10);
+            .domain(["Other", ...selectedChamps])
+            .range(['#808080', ...d3.schemeCategory10]);
 
         let all_total = 0
         let other_total = 0
@@ -27,7 +29,7 @@ class Waffle {
         let squares = 500
 
         for (var champ of this.allChamps) {
-            let all_years = champData[champ]
+            let all_years = this.champData[champ]
             let curr_year_data = all_years[year - 2011]
 
             if (selectedChamps.includes(champ)) {
@@ -41,7 +43,7 @@ class Waffle {
 
         var data = []
         for (var champ of selectedChamps) {
-            let all_years = champData[champ]
+            let all_years = this.champData[champ]
             let curr_year_data = all_years[year - 2011]
 
             data.push({"name" : champ, "value" : (curr_year_data[col] * squares) / all_total})
