@@ -1,8 +1,8 @@
-.divvy-boi {
+.vis-container {
     display: flex;
 }
 
-.divvy-lad {
+.bar-waffle-container {
     display: flex;
     flex-direction: column;
 }

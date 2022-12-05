@@ -1,3 +1,5 @@
+// The table class represents the table in our visualization. It is also in charge of sending new data
+// to the waffle and bar charts when rows are selected or deselected.
 class Table {
     constructor(champData, years, champs, datemap, bar, cols, waffle) {
         this.years = years;
@@ -37,10 +39,7 @@ class Table {
         .selectAll("th")
         .data(["Champion", ...cols])
         .on("click", (a, d) => {
-            const column = d3.select('#column-headers')
-            .selectAll("th")
-            .filter((dat, i) => dat == d)
-
+            // Swaps sorting settings when clicking on a column
             if(this.selectedCol[0] == d) {
                 this.selectedCol[1] = !this.selectedCol[1]
             }
@@ -49,6 +48,7 @@ class Table {
                 this.selectedCol[1] = false;
             }
 
+            // Sorts a column in ascending or descending order
             const tempArr = [...this.datemap[this.currYear]];
             if (d == "Champion") {
                 tempArr.sort((a, b) => a[d].localeCompare(b[d]));
@@ -61,6 +61,7 @@ class Table {
                 tempArr.reverse();
             }
 
+            // Redoes table highlighting to follow the new row order
             this.selectedChamps.forEach(champ => {
                 d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', "white");
             });
@@ -74,6 +75,7 @@ class Table {
                     this.defaultCharts()
                 }
                 else {
+                    // Redraw if this is a new column type
                     this.bar.drawVisuals(this.selectedChamps, this.colorScale, this.dataCol);
                     this.waffle.drawWaffle(this.selectedChamps, this.dataCol, this.currYear, this.colorScale);
                 }
@@ -84,6 +86,7 @@ class Table {
         this.drawTable(this.datemap[this.currYear]);
     }
 
+    // Draws the table, using the input rows.
     drawTable(rows) {
         let rowSelection = d3.select('#table-body')
             .selectAll('tr')
@@ -91,6 +94,7 @@ class Table {
             .join('tr')
             .attr('id', d => `${this.champNameScrub(d.Champion)}-row`)
             .on('click', (i, d) => {
+                // If we click a row, we should highlight it
                 if (this.selectedChamps.find(dat => dat == d.Champion)) {
                     this.selectedChamps = this.selectedChamps.filter(dat => dat != d.Champion);
                     d3.select(`#${this.champNameScrub(d.Champion)}-row`).style('background-color', 'white');
@@ -105,12 +109,13 @@ class Table {
                     }
                 }
 
+                // Redraw with the new row included
                 if (this.selectedChamps.length == 0) {
                     this.defaultCharts();
                     return;
                 }
                 
-                const colorScale = this.createColorScale(this.selectedChamps, d3.schemeCategory10);
+                const colorScale = this.createColorScale(this.selectedChamps);
 
                 this.colorScale = colorScale;
 
@@ -120,7 +125,7 @@ class Table {
                 this.bar.drawVisuals(this.selectedChamps, colorScale, this.dataCol);
                 this.waffle.drawWaffle(this.selectedChamps, this.dataCol, this.currYear, colorScale);
             });
-
+        
         rowSelection.selectAll('td')
             .data(this.rowToCellDataTransform)
             .join(enter => {
@@ -149,18 +154,14 @@ class Table {
             })
     }
 
-    createColorScale(champs, colors) {
+    // Creates a color scale mapping from the input champs to our color scheme. Also always maps "Other" to gray for use in the waffle chart.
+    createColorScale(champs) {
         return d3.scaleOrdinal()
         .domain([...champs, "Other"])
         .range([...d3.schemeCategory10.slice(0, champs.length), "#808080"]);
-        // this.colorDict = {};
-        // for(var i = 0; i < champs.length; i++) {
-        //     this.colorDict[champs[i]] = colors[i];
-        // }
-        // this.colorDict['other'] = "#808080";
-        // return (chmp) => this.colorDict[chmp];
     }
 
+    // This takes every column from a data point and conforms it to a data structure, such that we can create one td per column in the data point.
     rowToCellDataTransform(d) {
         let champion_info = {
             type : "text",
@@ -250,11 +251,12 @@ class Table {
         return champ.replace(' ', '').replace('\'', '');
     }
 
+    // Generates the "default" (top five champs) view for the bar and waffle charts. This is used when no rows are selected in the table.
     defaultCharts() {
         const tempChamps = this.champs.slice(0, this.champs.length);
         tempChamps.sort((a, b) => this.champData[b][parseInt(this.currYear) - 2011][this.dataCol] - this.champData[a][parseInt(this.currYear) - 2011][this.dataCol]);
         const slicey = tempChamps.slice(0, 5);
-        this.colorScale = this.createColorScale(slicey, d3.schemeCategory10);
+        this.colorScale = this.createColorScale(slicey);
         
         this.bar.drawVisuals(slicey, this.colorScale, this.dataCol);
         this.waffle.drawWaffle(slicey, this.dataCol, this.currYear, this.colorScale);

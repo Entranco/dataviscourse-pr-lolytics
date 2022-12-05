@@ -1,6 +1,7 @@
 LEFT_LINE_MARGIN = 50;
 BOTTOM_LINE_MARGIN = 50;
 
+// A class that represents the bar visualization
 class Bar {
     constructor(champData, years, champs, cols) {
         this.years = years;
@@ -39,6 +40,7 @@ class Bar {
         }
     }
 
+    // Draws the table, using the specified champions, colorScale, and column of the data
     drawVisuals(currentChamps, colorScale, col) {
         let min = 100000000;
         let max = -1;
@@ -79,17 +81,20 @@ class Bar {
         .attr('height', d => 950 - yScale(d[0][col]))
         .attr('fill', d => colorScale(d[0].Champion))
         .on('mousemove', (e, d) => {
+            // Find the mouse position so we can draw tooltip
             let x = e.pageX;
             let y = e.pageY - 255;
             if (x > 500) {
                 x = x - 195;
             } 
 
+            // Delete the old tooltip
             d3.select('#bar-svg')
             .select('#tooltip')
             .selectAll('g')
             .remove();
 
+            // Draw the new tooltip
             const g = d3.select('#bar-svg')
             .select('#tooltip')
             .append('g')
@@ -139,16 +144,7 @@ class Bar {
         .text(col);
     }
 
-    numToData(num) {
-        const champ = this.champs[Math.floor(num / this.champs.length)]
-        const year = num % this.champs.length;
-        return this.champData[champ][year];
-    }
-
-    dataToNum(dat) {
-        return (this.champs.indexOf(dat.Champion) * this.champs.length) + parseInt(dat.year) - 2011;
-    }
-
+    // Parses data as a string and returns it as a number type. This allows us to use the numbers in computations later.
     convertDataToNum(data) {
         if (data == '-') {
             return 0.0;
