@@ -2,7 +2,8 @@
 Welcome to LOLytics, a League of Legends Worlds data visualization.
 
 ## Links
-Project website: 
+Project website: https://entranco.github.io/dataviscourse-pr-lolytics/
+
 Project video: 
 
 ## File Layout
