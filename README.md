@@ -4,7 +4,7 @@ Welcome to LOLytics, a League of Legends Worlds data visualization.
 ## Links
 Project website: https://entranco.github.io/dataviscourse-pr-lolytics/
 
-Project video: 
+Project video: https://youtu.be/0RdG1HRDWOA
 
 ## File Layout
 - data: The data folder holds all of our data. This includes all of the worlds data in csv form and a folder including all champion icons.
