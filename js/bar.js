@@ -1,7 +1,7 @@
 LEFT_LINE_MARGIN = 50;
 BOTTOM_LINE_MARGIN = 50;
 
-class Lines {
+class Bar {
     constructor(champData, years, champs, cols) {
         this.years = years;
         this.champData = champData;
@@ -16,32 +16,30 @@ class Lines {
             })
         }
 
-        d3.select('#line-svg')
+        d3.select('#bar-svg')
         .attr('height', 1000)
         .attr('width', 1010);
 
-        d3.select('#line-axis-labels')
+        d3.select('#bar-axis-labels')
         .append('text')
         .attr('x', '485')
         .attr('y', '990')
         .text('Year');
 
-        d3.select('#line-axis-labels')
+        d3.select('#bar-axis-labels')
         .append('text')
-        .attr('id', 'line-axis-label-y')
+        .attr('id', 'bar-axis-label-y')
         .attr('transform', 'translate(20, 520) rotate(270)')
         .text('Picks/Bans');
 
         
-        const lineHolder = d3.select('#lines');
+        const barHolder = d3.select('#bars');
         for(var i = 0; i < 10; i++) {
-            lineHolder.append("g").attr('id', `rect-holder-${i}`);
+            barHolder.append("g").attr('id', `rect-holder-${i}`);
         }
     }
 
     drawVisuals(currentChamps, colorScale, col) {
-        // draw some lines
-
         let min = 100000000;
         let max = -1;
 
@@ -59,16 +57,16 @@ class Lines {
         .domain([0, max])
         .range([950, 50]);
 
-        d3.select('#x-lineAxis')
+        d3.select('#x-barAxis')
         .call(d3.axisBottom(xScale))
         .attr('transform', `translate(0,950)`);
 
-        d3.select('#y-lineAxis')
+        d3.select('#y-barAxis')
         .call(d3.axisLeft(yScale))
         .attr('transform', `translate(50, 0)`);
 
-        d3.select('#line-svg')
-        .select('#lines')
+        d3.select('#bar-svg')
+        .select('#bars')
         .selectAll('g')
         .data(currentChamps)
         .join('g')
@@ -87,12 +85,12 @@ class Lines {
                 x = x - 195;
             } 
 
-            d3.select('#line-svg')
+            d3.select('#bar-svg')
             .select('#tooltip')
             .selectAll('g')
             .remove();
 
-            const g = d3.select('#line-svg')
+            const g = d3.select('#bar-svg')
             .select('#tooltip')
             .append('g')
             .attr('id', `${d[0].Champion}-rect`);
@@ -130,14 +128,14 @@ class Lines {
             .attr('dy', 15);
         })
         .on('mouseleave', _ => {
-            d3.select('#line-svg')
+            d3.select('#bar-svg')
             .select('#tooltip')
             .selectAll('g')
             .remove();
         });
         
 
-        d3.select('#line-axis-label-y')
+        d3.select('#bar-axis-label-y')
         .text(col);
     }
 

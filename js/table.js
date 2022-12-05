@@ -1,5 +1,5 @@
 class Table {
-    constructor(champData, years, champs, datemap, lines, cols, waffle) {
+    constructor(champData, years, champs, datemap, bar, cols, waffle) {
         this.years = years;
         this.champData = champData;
         this.champs = champs;
@@ -7,7 +7,7 @@ class Table {
         this.datemap = datemap;
         this.selectedChamps = [];
         this.selectedCol = [null, false];
-        this.lines = lines;
+        this.bar = bar;
         this.waffle = waffle;
         this.dataCol = "Picks/Bans";
         this.defaultCharts();
@@ -74,7 +74,7 @@ class Table {
                     this.defaultCharts()
                 }
                 else {
-                    this.lines.drawVisuals(this.selectedChamps, this.colorScale, this.dataCol);
+                    this.bar.drawVisuals(this.selectedChamps, this.colorScale, this.dataCol);
                     this.waffle.drawWaffle(this.selectedChamps, this.dataCol, this.currYear, this.colorScale);
                 }
             }
@@ -117,7 +117,7 @@ class Table {
                 this.selectedChamps.forEach(champ => {
                     d3.select(`#${this.champNameScrub(champ)}-row`).style('background-color', colorScale(champ));
                 });
-                this.lines.drawVisuals(this.selectedChamps, colorScale, this.dataCol);
+                this.bar.drawVisuals(this.selectedChamps, colorScale, this.dataCol);
                 this.waffle.drawWaffle(this.selectedChamps, this.dataCol, this.currYear, colorScale);
             });
 
@@ -256,7 +256,7 @@ class Table {
         const slicey = tempChamps.slice(0, 5);
         this.colorScale = this.createColorScale(slicey, d3.schemeCategory10);
         
-        this.lines.drawVisuals(slicey, this.colorScale, this.dataCol);
+        this.bar.drawVisuals(slicey, this.colorScale, this.dataCol);
         this.waffle.drawWaffle(slicey, this.dataCol, this.currYear, this.colorScale);
     }
     

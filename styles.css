@@ -24,7 +24,14 @@ th {
     font-weight: normal;
     text-align: center;
     padding-right: 6px;
-    min-width: 50px;
+}
+
+th:hover {
+    cursor: pointer;
+}
+
+td:hover {
+    cursor: pointer;
 }
 
 #champion {
@@ -48,7 +55,7 @@ h2 {
     text-align: center;
 }
 
-#line-axis-labels {
+#bar-axis-labels {
     font-size: 25px;
     font-family:'Times New Roman', Times, serif;
     font-weight: bold;
