@@ -1,5 +1,5 @@
 // This is a library we downloaded for making waffle charts more easily. You can access this library using the following:
-// github repo https://github.com/jbkunst/d3-waffle.git
+// github repo https://github.com/jbkunst/d3-waffle
 
 function d3waffle(_colorscale) {
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
